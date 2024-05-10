@@ -42,6 +42,47 @@ const createTodo = asyncHandler(async (req, res) => {
     }
 });
 
+const getAllTodos = asyncHandler(async (req, res) => {
+    try {
+        const todos = await Todo.find();
+        res
+            .status(200)
+            .json(new ApiResponse(200, todos, "Todos Fetched Successfully"));
+    } catch (error) {
+        throw new ApiError(500, error.message);
+    }
+});
+
+const updateTodo = asyncHandler(async (req, res) => {
+    try {
+        const { _id, title, description } = req.body;
+
+        // if (!title || !description) {
+        //     throw new ApiError(400, "All Fields Are Required")
+        // }
+
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            _id,
+            {
+                $set: {
+                    title,
+                    description
+                }
+            },
+            { new: true }
+        )
+
+        res
+            .status(200)
+            .json(new ApiResponse(200, updatedTodo, "Todo Updated Successfully"))
+
+    } catch (error) {
+        throw new ApiError(500, error.message)
+    }
+})
+
 export {
-    createTodo
+    createTodo,
+    getAllTodos,
+    updateTodo
 }
