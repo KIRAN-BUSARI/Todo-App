@@ -55,14 +55,16 @@ const getAllTodos = asyncHandler(async (req, res) => {
 
 const updateTodo = asyncHandler(async (req, res) => {
     try {
-        const { _id, title, description } = req.body;
+        const { id } = req.params;
+        console.log(id);
+        const { title, description } = req.body;
 
         // if (!title || !description) {
         //     throw new ApiError(400, "All Fields Are Required")
         // }
 
         const updatedTodo = await Todo.findByIdAndUpdate(
-            _id,
+            id,
             {
                 $set: {
                     title,
@@ -81,8 +83,47 @@ const updateTodo = asyncHandler(async (req, res) => {
     }
 })
 
+const completeTodo = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(id)
+        const completedTodo = await Todo.findByIdAndUpdate(
+            id, // Corrected parameter name
+            {
+                $set: {
+                    completed: true
+                }
+            },
+            { new: true }
+        );
+
+        if (!completedTodo) {
+            throw new ApiError(404, 'Todo not found');
+        }
+
+        res.status(200).json(new ApiResponse(200, completedTodo, "Todo Completed Successfully"));
+    } catch (error) {
+        throw new ApiError(500, error.message);
+    }
+});
+
+const deleteTodo = asyncHandler(async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedTodo = await Todo.findByIdAndDelete(id);
+        if (!deletedTodo) {
+            throw new ApiError(404, 'Todo not found');
+        }
+        res.status(200).json(new ApiResponse(200, deletedTodo, "Todo Deleted Successfully"));
+    } catch (error) {
+        throw new ApiError(500, error.message);
+    }
+});
+
 export {
     createTodo,
     getAllTodos,
-    updateTodo
+    updateTodo,
+    completeTodo,
+    deleteTodo
 }
