@@ -7,7 +7,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/createTodo" element={<CreateTodo />} />
-      <Route path="/updateTodo/:id" element={<UpdateTodo />} />
+      <Route path="/updateTodo" element={<UpdateTodo />} />
     </Routes>
   )
 }
