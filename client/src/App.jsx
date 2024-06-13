@@ -9,7 +9,7 @@ function App() {
       <Route path="/createTodo" element={<CreateTodo />} />
       <Route path="/updateTodo" element={<UpdateTodo />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
